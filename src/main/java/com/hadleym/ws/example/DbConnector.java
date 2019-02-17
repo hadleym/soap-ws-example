@@ -44,12 +44,12 @@ public class DbConnector {
         return conn;
     }
 
-    public List<String> getTables(String name) {
+    public List<String> getTables() {
         String sql = "SELECT name FROM sqlite_master WHERE type='table'";
         List<String> list = new ArrayList<String>();
         
          // SQLite connection string
-        String fullUrl = this.header + this.url + name;
+        String fullUrl = this.header + this.url + this.dbName;
         // SQL statement for creating a new table
         
         try (Connection conn = DriverManager.getConnection(fullUrl);
@@ -68,19 +68,19 @@ public class DbConnector {
         
     }
     
-    public boolean createDatabase(String name) {
+    public boolean createDatabase() {
          // SQLite connection string
-        String fullUrl = header + this.url + name;
-        Connection conn = this.connect(name);
+        String fullUrl = header + this.url + this.dbName;
+        
         try {
-            conn = DriverManager.getConnection(fullUrl);
+            DriverManager.getConnection(fullUrl);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
         }
-        this.conn= conn;
         return true;
     }
+    
     public boolean deleteDatabase() {
         Path path = Paths.get(this.url+this.dbName);
         try {
@@ -92,14 +92,14 @@ public class DbConnector {
         return true;
     }
     
-    public void insert(String dbName, String tableName, String name, int value) {
+    public void insert(String tableName, String name, int value) {
         String sql = String.format("INSERT INTO %s(name, value) VALUES(?,?)" , 
                 tableName);
 //        String sql = new String("INSERT INTO games(name, value) VALUES(?,?)");
         
         
          // SQLite connection string
-        String fullUrl = this.header + this.url + dbName;
+        String fullUrl = this.header + this.url + this.dbName;
         // SQL statement for creating a new table
         
         try (Connection conn = DriverManager.getConnection(fullUrl);
@@ -111,8 +111,8 @@ public class DbConnector {
             System.out.println("SQL EXCEPTION !!!!" + e.getMessage());
         }
     }
-    public void update(String dbName, String tableName, String name, int value) {
-        String fullUrl = this.header + this.url + dbName;
+    public void update(String tableName, String name, int value) {
+        String fullUrl = this.header + this.url + this.dbName;
         String sql = "UPDATE games SET value = ? WHERE name = ?";
         
         try (Connection conn = DriverManager.getConnection(fullUrl);
@@ -125,7 +125,7 @@ public class DbConnector {
         }
     }
     
-    public int getValue(String dbName, String tableName, String name) {
+    public int getValue(String tableName, String name) {
         String sql = "SELECT id, name, value FROM " + tableName + " WHERE name is \"" + name +"\"";
         String fullUrl = this.header + this.url + dbName;
         int result = 0;
@@ -151,7 +151,7 @@ public class DbConnector {
         return result;
     }
     
-    public boolean createTable(String dbName, String tableName) {
+    public boolean createTable(String tableName) {
          // SQLite connection string
         String url = this.header + this.url + dbName;
         

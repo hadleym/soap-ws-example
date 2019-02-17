@@ -16,25 +16,25 @@ public class DatabaseTest {
         DbConnector conn = new DbConnector(url, "test.db");
 
         conn.deleteDatabase();
-        assertTrue(conn.createDatabase("test.db"));
+        assertTrue(conn.createDatabase());
         assertTrue(conn.deleteDatabase());
 
-        conn.createDatabase("test.db");
+        conn.createDatabase();
         assertTrue(Files.exists(Paths.get(url+"test.db")));
-        conn.createTable("test.db", "games");
-        assertEquals(conn.getTables("test.db").get(0), 
+        conn.createTable("games");
+        assertEquals(conn.getTables().get(0), 
                 new String("games"));
-        conn.createTable("test.db", "games2");
-        assertEquals(conn.getTables("test.db").get(1), 
+        conn.createTable("games2");
+        assertEquals(conn.getTables().get(1), 
                 new String("games2"));
-        conn.insert("test.db", "games", "ties", 0);
-        conn.insert("test.db", "games", "wins", 0);
-        conn.insert("test.db", "games", "losses", 0);
+        conn.insert("games", "ties", 0);
+        conn.insert("games", "wins", 0);
+        conn.insert("games", "losses", 0);
         
-        assertEquals(conn.getValue("test.db", "games", "ties"), 0);
+        assertEquals(conn.getValue("games", "ties"), 0);
                 
-        conn.update("test.db"," games", "wins", 1);
-        assertEquals(conn.getValue("test.db", "games", "wins"), 1);
+        conn.update(" games", "wins", 1);
+        assertEquals(conn.getValue("games", "wins"), 1);
         
     }
 }
