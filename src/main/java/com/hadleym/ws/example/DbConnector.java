@@ -81,6 +81,18 @@ public class DbConnector {
         return true;
     }
     
+    public void deleteTable(String tableName) {
+        String fullUrl = header + this.url + this.dbName;
+        String sql = "DROP TABLE ?";
+        try (Connection conn = DriverManager.getConnection(fullUrl);
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, tableName);
+                pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("SQL EXCEPTION !!!!" + e.getMessage());
+        }
+    }
+    
     public boolean deleteDatabase() {
         Path path = Paths.get(this.url+this.dbName);
         try {
